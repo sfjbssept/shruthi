@@ -3,6 +3,7 @@ package com.secure.controller;
 
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.Base64Utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.security.entity.Employee;
 
 @RunWith(SpringRunner.class)
@@ -62,6 +64,22 @@ public class AppControllerTest {
 		
 	}
 	
+	/*
+	 * @Test public void testEmployeePost() throws Exception{ Employee
+	 * employee=createEmployee("test", "dev"); ResultActions
+	 * responseEntity=processApiRequest(posturl,HttpMethod.POST, null, employee,
+	 * admin_name1, admin_password); responseEntity.andExpect(status().isOk());
+	 * ObjectMapper mapper = new ObjectMapper(); Employee result =
+	 * mapper.readValue(responseEntity.andReturn().getResponse().getContentAsString(
+	 * ),new TypeReference<Employee>() {
+	 * 
+	 * }); assertEquals("test", result.getName()); assertEquals("dev",
+	 * result.getRole()); }
+	 * 
+	 * private Employee createEmployee(String string, String string2) { // TODO
+	 * Auto-generated method stub return null; }
+	 */
+
 	public ResultActions processApiRequest(String api, HttpMethod methodtype,String name, Employee employee,
 		String username,String password){
 		
@@ -70,7 +88,9 @@ public class AppControllerTest {
 		try {
 			switch(methodtype) {
 			case GET :
-				response = mockMvc.perform(get(api).header(HttpHeaders.AUTHORIZATION, secret));
+				//response = mockMvc.perform(get(api).header(HttpHeaders.AUTHORIZATION, secret));
+				response = mockMvc.perform(get(api).with(user(username).password(password).roles("USER")));
+
 				break;
 			}
 		}
